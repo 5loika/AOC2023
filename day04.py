@@ -1,5 +1,5 @@
 #!/bin/python3
-""" Advent of Code 2023 -- Day 03"""
+""" Advent of Code 2023 -- Day 04"""
 
 import sys
 import aocd

@@ -27,6 +27,7 @@ def part1(rawdata):
     tot = 0
     lines = rawdata.splitlines()
     for line in lines:
+        # use re.findall
         x = re.findall("\\d", line)
         tot += 10 * int(x[0]) + int(x[-1])
     return tot
@@ -37,7 +38,8 @@ def part2(rawdata):
     lines = rawdata.splitlines()
     tot = 0
     for line in lines:
-        # Messy, but it works!
+        # use replace to account for written digits
+        # Messy approach, but it works!
         line = line.replace("one", "o1e")
         line = line.replace("two", "t2o")
         line = line.replace("three", "t3e")
@@ -47,6 +49,7 @@ def part2(rawdata):
         line = line.replace("seven", "s7n")
         line = line.replace("eight", "e8t")
         line = line.replace("nine", "n9e")
+        # Still use re.findall
         x = re.findall("\\d", line)
         tot += 10 * int(x[0]) + int(x[-1])
     return tot

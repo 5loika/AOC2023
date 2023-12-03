@@ -31,6 +31,8 @@ def part1(rawdata):
             for t in turns:
                 count, color = t.strip().split()
                 count = int(count)
+                # probably a cleaner way to do this
+                # with break(s) and else(s)
                 if count > cubes[color]:
                     valid = False
         if valid:

@@ -2,30 +2,80 @@
 """ Advent of Code 2023 -- Day 03"""
 
 import sys
+import re
 import aocd
 
-TESTDATA1 = TESTDATA2 = """
+TESTDATA1 = TESTDATA2 = """467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
 """
 
-TEST1 = None
-TEST2 = None
+TEST1 = 4361
+TEST2 = 467835
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
     lines = rawdata.splitlines()
-    for line in lines:
-        continue
-    return None
+    rows = len(lines)
+    cols = len(lines[0])
+    result = 0
+    for r in range(rows):
+        # find numbers in row
+        nums = re.findall('\\d+',lines[r])
+        pos = 0
+        for n in nums:
+            # find col for each number
+            c = lines[r].find(n,pos)
+            pos = c + len(n)
+            partnum = False
+            for j in range(max(r-1,0),min(r+2,rows)):
+                for k in range(max(c-1,0),min(c+len(n)+1,cols)):
+                    if not lines[j][k].isalnum() and not lines[j][k] == '.':
+                        partnum = True
+                        break
+                if partnum:
+                    break
+            if partnum:
+                result += int(n)
+    return result
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
     lines = rawdata.splitlines()
-    for line in lines:
-        continue
-    return None
-
+    rows = len(lines)
+    cols = len(lines[0])
+    gears = [[None] * cols for i in range(rows)]
+    ratio = 0
+    for r in range(rows):
+        # find numbers in row
+        nums = re.findall('\\d+',lines[r])
+        pos = 0
+        for n in nums:
+            # find col for each number
+            c = lines[r].find(n,pos)
+            pos = c + len(n)
+            for j in range(max(r-1,0),min(r+2,rows)):
+                for k in range(max(c-1,0),min(c+len(n)+1,cols)):
+                    if lines[j][k] == '*':
+                        if gears[j][k] is None:
+                            gears[j][k] = [int(n)]
+                        else:
+                            gears[j][k].append(int(n))
+    for r in range(rows):
+        for c in range(cols):
+            if gears[r][c] is not None:
+                if len(gears[r][c]) == 2:
+                    ratio += gears[r][c][0] * gears[r][c][1]
+    return ratio
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

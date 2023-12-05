@@ -43,12 +43,14 @@ humidity-to-location map:
 TEST1 = 35
 TEST2 = 46
 
-def checkmap(m,v):
+
+def checkmap(m, v):
     """return mapped value"""
     for l in m:
-        if v in range(l[1],l[1]+l[2]):
-            return v+l[0]-l[1]
+        if v in range(l[1], l[1] + l[2]):
+            return v + l[0] - l[1]
     return v
+
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
@@ -67,54 +69,54 @@ def part1(rawdata):
     for l in groups[1].splitlines():
         # seeds-to-soil
         if not l == "seed-to-soil map:":
-            j, k, r = l.strip().split()
-            seedstosoil.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            seedstosoil.append([j, k, r])
     for l in groups[2].splitlines():
         # soil-to-fertilizer
         if not l == "soil-to-fertilizer map:":
-            j, k, r = l.strip().split()
-            soiltofertilizer.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            soiltofertilizer.append([j, k, r])
     for l in groups[3].splitlines():
         # fertilizer-to-water
         if not l == "fertilizer-to-water map:":
-            j, k, r = l.strip().split()
-            fertilizertowater.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            fertilizertowater.append([j, k, r])
     for l in groups[4].splitlines():
         # water-to-light
         if not l == "water-to-light map:":
-            j, k, r = l.strip().split()
-            watertolight.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            watertolight.append([j, k, r])
     for l in groups[5].splitlines():
         if not l == "light-to-temperature map:":
             # light-to-temperature
-            j, k, r = l.strip().split()
-            lighttotemperature.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            lighttotemperature.append([j, k, r])
     for l in groups[6].splitlines():
         # temperature-to-humidity
         if not l == "temperature-to-humidity map:":
-            j, k, r = l.strip().split()
-            temperaturetohumidity.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            temperaturetohumidity.append([j, k, r])
     for l in groups[7].splitlines():
         # humidity-to-location
         if not l == "humidity-to-location map:":
-            j, k, r = l.strip().split()
-            humiditytolocation.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            humiditytolocation.append([j, k, r])
     for n in seeds:
-        print("Seed",n,end='')
-        l = checkmap(seedstosoil,n)
-        print(" soil",l,end='')
-        l = checkmap(soiltofertilizer,l)
-        print(" fertilizer",l,end='')
-        l = checkmap(fertilizertowater,l)
-        print(" water",l,end='')
-        l = checkmap(watertolight,l)
-        print(" light",l,end='')
-        l = checkmap(lighttotemperature,l)
-        print(" temperature",l,end='')
-        l = checkmap(temperaturetohumidity,l)
-        print(" humidity",l,end='')
-        l = checkmap(humiditytolocation,l)
-        print(" location",l)
+        print("Seed", n, end="")
+        l = checkmap(seedstosoil, n)
+        print(" soil", l, end="")
+        l = checkmap(soiltofertilizer, l)
+        print(" fertilizer", l, end="")
+        l = checkmap(fertilizertowater, l)
+        print(" water", l, end="")
+        l = checkmap(watertolight, l)
+        print(" light", l, end="")
+        l = checkmap(lighttotemperature, l)
+        print(" temperature", l, end="")
+        l = checkmap(temperaturetohumidity, l)
+        print(" humidity", l, end="")
+        l = checkmap(humiditytolocation, l)
+        print(" location", l)
         locations.append(l)
     return min(locations)
 
@@ -134,77 +136,87 @@ def part2(rawdata):
     for l in groups[1].splitlines():
         # seeds-to-soil
         if not l == "seed-to-soil map:":
-            j, k, r = l.strip().split()
-            seedstosoil.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            seedstosoil.append([j, k, r])
     for l in groups[2].splitlines():
         # soil-to-fertilizer
         if not l == "soil-to-fertilizer map:":
-            j, k, r = l.strip().split()
-            soiltofertilizer.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            soiltofertilizer.append([j, k, r])
     for l in groups[3].splitlines():
         # fertilizer-to-water
         if not l == "fertilizer-to-water map:":
-            j, k, r = l.strip().split()
-            fertilizertowater.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            fertilizertowater.append([j, k, r])
     for l in groups[4].splitlines():
         # water-to-light
         if not l == "water-to-light map:":
-            j, k, r = l.strip().split()
-            watertolight.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            watertolight.append([j, k, r])
     for l in groups[5].splitlines():
         if not l == "light-to-temperature map:":
             # light-to-temperature
-            j, k, r = l.strip().split()
-            lighttotemperature.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            lighttotemperature.append([j, k, r])
     for l in groups[6].splitlines():
         # temperature-to-humidity
         if not l == "temperature-to-humidity map:":
-            j, k, r = l.strip().split()
-            temperaturetohumidity.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            temperaturetohumidity.append([j, k, r])
     for l in groups[7].splitlines():
         # humidity-to-location
         if not l == "humidity-to-location map:":
-            j, k, r = l.strip().split()
-            humiditytolocation.append([int(j),int(k),int(r)])
+            j, k, r = [int(x) for x in l.strip().split()]
+            humiditytolocation.append([j, k, r])
 
     # Brute force approach takes too long to run
     # Attempt to approximate answer by looping through by 1000
     # then step down to 100, 10, and finally 1 to find solution
     # This happens to work for my input, but could miss the best
     # solution with other inputs
- 
-    k = 0
+
+    bestk = 0
     narrow = None
     bestn = None
+    stop = len(seeds)
     step = 1000
     while True:
-        while k < len(seeds):
-            print("Checking locations:",int(seeds[k]),"to",int(seeds[k])+int(seeds[k+1])-1,"Step",step)
-            for n in range(int(seeds[k]), int(seeds[k])+int(seeds[k+1]),step):
+        k = bestk
+        while k < stop:
+            print(
+                "Checking locations:",
+                int(seeds[k]),
+                "to",
+                int(seeds[k]) + int(seeds[k + 1]) - 1,
+                "Step",
+                step,
+            )
+            for n in range(int(seeds[k]), int(seeds[k]) + int(seeds[k + 1]), step):
                 if narrow is None or n in narrow:
-                    l = checkmap(seedstosoil,n)
-                    l = checkmap(soiltofertilizer,l)
-                    l = checkmap(fertilizertowater,l)
-                    l = checkmap(watertolight,l)
-                    l = checkmap(lighttotemperature,l)
-                    l = checkmap(temperaturetohumidity,l)
-                    l = checkmap(humiditytolocation,l)
+                    l = checkmap(seedstosoil, n)
+                    l = checkmap(soiltofertilizer, l)
+                    l = checkmap(fertilizertowater, l)
+                    l = checkmap(watertolight, l)
+                    l = checkmap(lighttotemperature, l)
+                    l = checkmap(temperaturetohumidity, l)
+                    l = checkmap(humiditytolocation, l)
                     if result is None:
                         result = l
                         bestn = n
-                        print("Seed:",n,"Location:",l)
+                        print("Seed:", n, "Location:", l)
                     else:
-                        q = min(result,l)
+                        q = min(result, l)
                         if q != result:
                             result = q
                             bestn = n
-                            print("Seed:",n,"Location:",l)
+                            bestk = k
+                            print("Seed:", n, "Location:", l)
             k += 2
         if step == 1:
             return result
-        narrow = range(bestn-step,bestn+step)
+        narrow = range(bestn - step, bestn + step)
         step = step // 10
-        k = 0
+        stop = bestk + 1
     return None
 
 

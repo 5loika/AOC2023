@@ -102,21 +102,21 @@ def part1(rawdata):
             j, k, r = [int(x) for x in l.strip().split()]
             humiditytolocation.append([j, k, r])
     for n in seeds:
-        print("Seed", n, end="")
+        # print("Seed", n, end="")
         l = checkmap(seedstosoil, n)
-        print(" soil", l, end="")
+        # print(" soil", l, end="")
         l = checkmap(soiltofertilizer, l)
-        print(" fertilizer", l, end="")
+        # print(" fertilizer", l, end="")
         l = checkmap(fertilizertowater, l)
-        print(" water", l, end="")
+        # print(" water", l, end="")
         l = checkmap(watertolight, l)
-        print(" light", l, end="")
+        # print(" light", l, end="")
         l = checkmap(lighttotemperature, l)
-        print(" temperature", l, end="")
+        # print(" temperature", l, end="")
         l = checkmap(temperaturetohumidity, l)
-        print(" humidity", l, end="")
+        # print(" humidity", l, end="")
         l = checkmap(humiditytolocation, l)
-        print(" location", l)
+        # print(" location", l)
         locations.append(l)
     return min(locations)
 
@@ -183,14 +183,14 @@ def part2(rawdata):
     while True:
         k = bestk
         while k < stop:
-            print(
-                "Checking locations:",
-                int(seeds[k]),
-                "to",
-                int(seeds[k]) + int(seeds[k + 1]) - 1,
-                "Step",
-                step,
-            )
+            # print(
+            #     "Checking locations:",
+            #     int(seeds[k]),
+            #     "to",
+            #     int(seeds[k]) + int(seeds[k + 1]) - 1,
+            #     "Step",
+            #     step,
+            # )
             for n in range(int(seeds[k]), int(seeds[k]) + int(seeds[k + 1]), step):
                 if narrow is None or n in narrow:
                     l = checkmap(seedstosoil, n)
@@ -203,14 +203,14 @@ def part2(rawdata):
                     if result is None:
                         result = l
                         bestn = n
-                        print("Seed:", n, "Location:", l)
+                        # print("Seed:", n, "Location:", l)
                     else:
                         q = min(result, l)
                         if q != result:
                             result = q
                             bestn = n
                             bestk = k
-                            print("Seed:", n, "Location:", l)
+                            # print("Seed:", n, "Location:", l)
             k += 2
         if step == 1:
             return result

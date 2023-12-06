@@ -2,31 +2,54 @@
 """ Advent of Code 2023 -- Day 06"""
 
 import sys
+import re
+import math
 import aocd
 
-TESTDATA1 = TESTDATA2 = """
+TESTDATA1 = TESTDATA2 = """Time:      7  15   30
+Distance:  9  40  200
 """
 
-TEST1 = None
-TEST2 = None
+TEST1 = 288
+TEST2 = 71503
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
-    result = None
+    wins = []
     lines = rawdata.splitlines()
-    for line in lines:
-        continue
-    return result
+    times = [int(i) for i in re.findall('\\d+',lines[0])]
+    distances = [int(i) for i in re.findall('\\d+',lines[1])]
+    for race, time in enumerate(times):
+        c = 0
+        for p in range(time):
+            dist = (p)*(time-p)
+            if dist > distances[race]:
+                c += 1
+        wins.append(c)
+    return math.prod(wins)
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-    result = None
     lines = rawdata.splitlines()
-    for line in lines:
-        continue
-    return result
+    times = [int(i) for i in re.findall('\\d+',lines[0].replace(' ',''))]
+    distances = [int(i) for i in re.findall('\\d+',lines[1].replace(' ',''))]
+    loss = 0
+    race = 0
+    for p in range(times[race]):
+        dist = (p)*(times[race]-p)
+        if dist <= distances[race]:
+            loss += 1
+        else:
+            break
+    for p in range((times[race]),0,-1):
+        dist = (p)*(times[race]-p)
+        if dist <= distances[race]:
+            loss += 1
+        else:
+            break
+    return times[race] + 1 - loss
 
 
 if __name__ == "__main__":

@@ -18,12 +18,12 @@ def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
     wins = []
     lines = rawdata.splitlines()
-    times = [int(i) for i in re.findall('\\d+',lines[0])]
-    distances = [int(i) for i in re.findall('\\d+',lines[1])]
+    times = [int(i) for i in re.findall("\\d+", lines[0])]
+    distances = [int(i) for i in re.findall("\\d+", lines[1])]
     for race, time in enumerate(times):
         c = 0
         for p in range(time):
-            dist = (p)*(time-p)
+            dist = (p) * (time - p)
             if dist > distances[race]:
                 c += 1
         wins.append(c)
@@ -33,23 +33,20 @@ def part1(rawdata):
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
     lines = rawdata.splitlines()
-    times = [int(i) for i in re.findall('\\d+',lines[0].replace(' ',''))]
-    distances = [int(i) for i in re.findall('\\d+',lines[1].replace(' ',''))]
+    times = [int(i) for i in re.findall("\\d+", lines[0].replace(" ", ""))]
+    distances = [int(i) for i in re.findall("\\d+", lines[1].replace(" ", ""))]
+    time = times[0]
+    dist = distances[0]
     loss = 0
-    race = 0
-    for p in range(times[race]):
-        dist = (p)*(times[race]-p)
-        if dist <= distances[race]:
+    for p in range(time):
+        # Count first group of losses
+        d = (p) * (time - p)
+        if d <= dist:
             loss += 1
         else:
             break
-    for p in range((times[race]),0,-1):
-        dist = (p)*(times[race]-p)
-        if dist <= distances[race]:
-            loss += 1
-        else:
-            break
-    return times[race] + 1 - loss
+        # subtract double the losses to calculate wins
+    return time + 1 - (2 * loss)
 
 
 if __name__ == "__main__":

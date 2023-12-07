@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/bin/python3.12
 """ Advent of Code 2023 -- Day 04"""
 
 import sys

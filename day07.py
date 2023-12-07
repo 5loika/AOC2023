@@ -1,58 +1,26 @@
-#!/bin/python3.12
-""" Advent of Code 2023 -- Day 01"""
+#!/bin/python3
+""" Advent of Code 2023 -- Day 07"""
 
 import sys
-import re
 import aocd
 
-TESTDATA1 = """1abc2
-pqr3stu8vwx
-a1b2c3d4e5f
-treb7uchet
+TESTDATA1 = TESTDATA2 = """
 """
-TESTDATA2 = """two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7pqrstsixteen
-"""
-TEST1 = 142
-TEST2 = 281
+
+TEST1 = None
+TEST2 = None
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
-    tot = 0
-    lines = rawdata.splitlines()
-    for line in lines:
-        # use re.findall
-        x = re.findall("\\d", line)
-        tot += 10 * int(x[0]) + int(x[-1])
-    return tot
+
+    return rawdata
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-    lines = rawdata.splitlines()
-    tot = 0
-    for line in lines:
-        # use replace to account for written digits
-        # Messy approach, but it works!
-        line = line.replace("one", "o1e")
-        line = line.replace("two", "t2o")
-        line = line.replace("three", "t3e")
-        line = line.replace("four", "f4r")
-        line = line.replace("five", "f5e")
-        line = line.replace("six", "s6x")
-        line = line.replace("seven", "s7n")
-        line = line.replace("eight", "e8t")
-        line = line.replace("nine", "n9e")
-        # Still use re.findall
-        x = re.findall("\\d", line)
-        tot += 10 * int(x[0]) + int(x[-1])
-    return tot
+
+    return rawdata
 
 
 if __name__ == "__main__":

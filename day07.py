@@ -87,37 +87,42 @@ def part2(rawdata):
             else:
                 all_freq[i] = 1
         most = max(all_freq.values())
-        if most == 5:
+        if most == 5: # 5 of a kind
             rank = 7
-        elif most == 4:
+        elif most == 4: # 4 of a kind
             rank = 6
+            # jokers can make this 5 of a kind
             if jokers == 4 or jokers == 1:
                 rank = 7
-        elif most == 3:
-            if 2 in all_freq.values():
+        elif most == 3: # 3 of a kind or full house
+            if 2 in all_freq.values(): # full house
                 rank = 5
+                # jokers can make this 5 of a kind
                 if jokers == 3 or jokers == 2:
                     rank = 7
             else:
-                rank = 4
+                rank = 4 # 3 of a kind
+                # jokers can make this 4 of a kind
                 if jokers == 1 or jokers == 3:
                     rank = 6
         elif most == 2:
-            rank = 1
+            # one or two pairs
+            rank = 1 
             for i in all_freq.values():
-                if i == 2:
+                if i == 2: # count pairs
                     rank += 1
-            if rank == 3:
-                if jokers == 2:
+            if rank == 3: # two pairs
+                if jokers == 2: # a pair of jokers makes 4 of a kind
                     rank = 6
-                elif jokers == 1:
+                elif jokers == 1: # a sngle joker make full house
                     rank = 5
-            elif rank == 2:
+            elif rank == 2: # single pair
+                # jokers can make this 3 of a kind
                 if jokers == 2 or jokers == 1:
                     rank = 4
         else:
-            rank = 1
-            if jokers == 1:
+            rank = 1 # high card
+            if jokers == 1: # with joker is a pair
                 rank = 2
         
         camelcards.append([rank,hand,int(bid)])

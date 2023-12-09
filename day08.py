@@ -1,5 +1,5 @@
 #!/bin/python3
-"""TEST"""
+""" Advent of Code 2023 -- Day 08"""
 
 import sys
 import re

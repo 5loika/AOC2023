@@ -147,10 +147,9 @@ def part1(rawdata):
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-    lines = rawdata.splitlines()
-    total = 0
 
-    return total
+
+    return None
 
 
 if __name__ == "__main__":

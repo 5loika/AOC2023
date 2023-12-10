@@ -3,7 +3,8 @@
 
 import sys
 import aocd
-from shapely.geometry import Point, Polygon
+# revised to count 'crossings' instead of using shapely
+# from shapely.geometry import Point, Polygon
 
 TESTDATA1 = """-L|F7
 7S-7|
@@ -158,6 +159,7 @@ def part1(rawdata):
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
+    startN = startE = startS = startW = False
     map = []
     path = []
     start = None
@@ -180,6 +182,7 @@ def part2(rawdata):
         # print("Check North of Start: ",start[0]-1,start[1])
         if map[start[0] - 1][start[1]] in "|7F":
             # print("North is connected")
+            startN = True
             if a == None:
                 a = (start[0] - 1, start[1])
             elif b == None:
@@ -191,6 +194,7 @@ def part2(rawdata):
         # print("Check East of Start")
         if map[start[0]][start[1] + 1] in "-J7":
             # print("East is connected")
+            startE = True
             if a == None:
                 a = (start[0], start[1] + 1)
             elif b == None:
@@ -202,6 +206,7 @@ def part2(rawdata):
         # print("Check South of Start")
         if map[start[0] + 1][start[1]] in "|LJ":
             # print("South is connected")
+            startS = True
             if a == None:
                 a = (start[0] + 1, start[1])
             elif b == None:
@@ -213,6 +218,7 @@ def part2(rawdata):
         # print("Check West of Start")
         if map[start[0]][start[1] - 1] in "-LF":
             # print("West is connected")
+            startW = True
             if a == None:
                 a = (start[0], start[1] - 1)
             elif b == None:
@@ -263,42 +269,63 @@ def part2(rawdata):
             # print("Both a and b already on path")
             break    
 
-    mpoly = Polygon(path)
-    count = 0
-    for r in range(len(map)):
-        for c in range(len(map[0])):
-            p = Point(r,c)
-            if mpoly.contains(p):
-                count += 1
-
-    # change = True
-    # while change:
-    #     change = False
-    #     for i in range(len(map)):
-    #         for j in range(len(map[0])):
-    #             if (i,j) not in path and map[i][j] != 'O':
-    #                 if i == 0 or j == 0 or i == len(map)-1 or j == len(map[0])-1:
-    #                     change = True
-    #                     map[i][j] = 'O'
-    #                 elif map[i-1][j] == 'O' or map[i+1][j] == 'O' or map[i][j-1]=='O' or map[i][j+1] == 'O':
-    #                     change = True
-    #                     map[i][j] = 'O'
-    #                 else:
-    #                     c = 0
-    #                     for n in range(j+1):
-    #                         if map[i][n] in '|LFJ7':
-    #                             c += 1
-    #                     print("Point:", i, j,"\tCount =",c)
-    #                     if  c % 2 == 0:
-    #                         map[i][j] = 'O'
-    #                         change = True
+    # mpoly = Polygon(path)
     # count = 0
     # for r in range(len(map)):
     #     for c in range(len(map[0])):
-    #         if (r,c) not in path and map[r][c] != 'O':
+    #         p = Point(r,c)
+    #         if mpoly.contains(p):
     #             count += 1
-    #         print(map[r][c],end=' ')
-    #     print()
+
+    for i in range(len(map)):
+        for j in range(len(map[0])):
+            if (i,j) not in path:
+                map[i][j] = '.'
+    if startN and startS:
+        map[start[0]][start[1]] = '|'
+    elif startN and startE:
+        map[start[0]][start[1]] = 'L'
+    elif startN and startW:
+        map[start[0]][start[1]] = 'J'
+    elif startE and startW:
+        map[start[0]][start[1]] = '-'
+    elif startE and startS:
+        map[start[0]][start[1]] = 'F'
+    elif startS and startW:
+        map[start[0]][start[1]] = '7'
+
+
+    change = True
+    while change:
+        change = False
+        for i in range(len(map)):
+            for j in range(len(map[0])):
+                if (i,j) not in path and map[i][j] != 'O':
+                    if i == 0 or j == 0 or i == len(map)-1 or j == len(map[0])-1:
+                        change = True
+                        map[i][j] = 'O'
+                    elif map[i-1][j] == 'O' or map[i+1][j] == 'O' or map[i][j-1]=='O' or map[i][j+1] == 'O':
+                        change = True
+                        map[i][j] = 'O'
+                    else:
+                        c = 0
+                        up = False
+                        down = False
+                        for n in range(j+1):
+                            if map[i][n] in 'JL|':
+                                c += 1
+                        if  c % 2 == 0:
+                            if i == 3 and j == 14:
+                                print(c)
+                            map[i][j] = 'O'
+                            change = True
+    count = 0
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            if (r,c) not in path and map[r][c] != 'O':
+                count += 1
+        #     print(map[r][c],end=' ')
+        # print()
                        
     return count
 

@@ -2,23 +2,110 @@
 """ Advent of Code 2023 -- Day 11"""
 
 import sys
+from itertools import combinations
 import aocd
 
-TESTDATA1 = TESTDATA2 = """
+TESTDATA1 = TESTDATA2 = """...#......
+.......#..
+#.........
+..........
+......#...
+.#........
+.........#
+..........
+.......#..
+#...#.....
 """
 
-TEST1 = None
-TEST2 = None
+TEST1 = 374
+TEST2 = 1030
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
-    return None
+    map = []
+    gal = []
+    lines = rawdata.splitlines()
+    for l in lines:
+        map.append([c for c in l])
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            if map[r][c] == "#":
+                gal.append((r, c))
+    galrows = [int(r) for r, c in gal]
+    galcols = [int(c) for r, c in gal]
+    for n in range(len(map[0]) - 1, -1, -1):
+        if n not in galcols:
+            for r in range(len(map)):
+                map[r].insert(n, ".")
+    newrow = ["." for n in range(len(map[0]))]
+    for n in range(len(map), -1, -1):
+        if n not in galrows:
+            map.insert(n, newrow)
+    galaxy = set()
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            if map[r][c] == "#":
+                galaxy.add((r, c))
+    combs = combinations(galaxy, 2)
+    total = 0
+    for p in combs:
+        d = abs(p[1][0] - p[0][0]) + abs(p[1][1] - p[0][1])
+        total += d
+    return total
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-    return None
+    map = []
+    gal = []
+    lines = rawdata.splitlines()
+    for l in lines:
+        map.append([c for c in l])
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            if map[r][c] == "#":
+                gal.append((r, c))
+    galrows = [int(r) for r, c in gal]
+    galcols = [int(c) for r, c in gal]
+    emptyrows = []
+    emptycols = []
+    for n in range(len(map)):
+        if n not in galrows:
+            emptyrows.append(n)
+    for n in range(len(map[0])):
+        if n not in galcols:
+            emptycols.append(n)
+    galaxy = set()
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            if map[r][c] == "#":
+                galaxy.add((r, c))
+    combs = combinations(galaxy, 2)
+    total = 0
+    expandfactor = 999999
+    for p in combs:
+        rexpand0 = rexpand1 = 0
+        cexpand0 = cexpand1 = 0
+        for r in emptyrows:
+            if p[0][0] > r:
+                rexpand0 += 1
+            if p[1][0] > r:
+                rexpand1 += 1
+        for c in emptycols:
+            if p[0][1] > c:
+                cexpand0 += 1
+            if p[1][1] > c:
+                cexpand1 += 1
+        rexpand0 *= expandfactor
+        rexpand1 *= expandfactor
+        cexpand0 *= expandfactor
+        cexpand1 *= expandfactor
+        d = abs((p[1][0] + rexpand1) - (p[0][0] + rexpand0)) + abs(
+            (p[1][1] + cexpand1) - (p[0][1] + cexpand0)
+        )
+        total += d
+    return total
 
 
 if __name__ == "__main__":

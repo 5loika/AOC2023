@@ -3,8 +3,7 @@
 
 import sys
 import aocd
-from itertools import combinations
-from itertools import permutations
+from functools import cache
 import re
 
 TESTDATA1 = TESTDATA2 = """???.### 1,1,3
@@ -16,48 +15,64 @@ TESTDATA1 = TESTDATA2 = """???.### 1,1,3
 """
 
 TEST1 = 21
-TEST2 = None
+TEST2 = 506250
+
+
+# @cache
+def aoc12(pattern, springs):
+    springsneeded = sum(springs)
+    if pattern.count("?") == 0:
+        # all ? replaced -- does it match repair pattern?
+        w = re.findall("#+", pattern)
+        r = []
+        for x in w:
+            r.append(len(x))
+        if r == springs:
+            return 1
+        else:
+            return 0
+    else:
+        if pattern.count("#") == springsneeded:
+            t = pattern
+            n = t.index("?")
+            t = t[:n] + "." + t[n + 1 :]
+            return aoc12(t, springs)
+        else:
+            t = pattern
+            u = pattern
+            n = t.index("?")
+            t = t[:n] + "." + t[n + 1 :]
+            u = u[:n] + "#" + u[n + 1 :]
+            return aoc12(t, springs) + aoc12(u, springs)
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
+    pattern = []
     springs = []
-    repair = []
+    total = 0
     lines = rawdata.splitlines()
     for l in lines:
         a, b = l.split()
-        springs.append(a)
-        repair.append([int(x) for x in b.split(',')])
-    total = 0
-    for d in range(len(springs)):
-        j = springs[d].count('?') # how many unknown
-        y = sum(repair[d]) # how many aprings do we need
-        k = springs[d].count('#') # how many springs do we have
-        p = ''.join(['#' for i in range(y-k)]) #springs 
-        p = p + ''.join(['.' for i in range(j-(y-k))]) # empty
-        o = set(permutations(p,j))
-        print(j,y,k,len(o),p)
-        for q in o:
-            t = springs[d] #copy.copy(s)
-            for c in q:
-                n = t.index('?')
-                t = t[:n]+c+t[n+1:]
-            w = re.findall('#+',t)
-            r = []
-            for x in w:
-                r.append(len(x))
-            if r == repair[d]:
-                print(springs[d],'\t',t,'\t',repair[d],'\t',r)
-                total += 1
-        print(d)
-    print(total)
+        pattern = a
+        springs = [int(x) for x in b.split(",")]
+        total += aoc12(pattern, springs)
     return total
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-
-    return None
+    pattern = []
+    springs = []
+    total = 0
+    lines = rawdata.splitlines()
+    for l in lines:
+        a, b = l.split()
+        pattern = a + "?" + a + "?" + a + "?" + a + "?" + a
+        b = b + "," + b + "," + b + "," + b + "," + b
+        springs = [int(x) for x in b.split(",")]
+        total += aoc12(pattern, springs)
+    return total
 
 
 if __name__ == "__main__":

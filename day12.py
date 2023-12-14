@@ -24,9 +24,7 @@ def aoc12(pattern, springs):
     if pattern.count("?") == 0:
         # all ? replaced -- does it match repair pattern?
         w = re.findall("#+", pattern)
-        r = []
-        for x in w:
-            r.append(len(x))
+        r = list(map(len, w))
         if r == springs:
             return 1
         else:

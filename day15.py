@@ -5,41 +5,61 @@ import sys
 import aocd
 import re
 
-TESTDATA1 = TESTDATA2 = """#.##..##.
-..#.##.#.
-##......#
-##......#
-..#.##.#.
-..##..##.
-#.#.##.#.
+TESTDATA1 = TESTDATA2 = """rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7"""
 
-#...##..#
-#....#..#
-..##..###
-#####.##.
-#####.##.
-..##..###
-#....#..#
-"""
+TEST1 = 1320
+TEST2 = 145
 
-TEST1 = 405
-TEST2 = None
+
+def lenshash(lens):
+    h = 0
+    for c in lens:
+        h += ord(c)
+        h *= 17
+        h = h % 256
+    return h
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
-    boards = rawdata.split('\n\n')
-    for n in boards:
-        z = n
-        z = z.replace('.','0')
-        z = z.replace('#','1')
-        print(z)
-
-    return None
+    total = 0
+    for w in rawdata.split(','):
+        total += lenshash(w)
+    return total
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-    return None
+    boxes  = {new_list: [] for new_list in range(257)}
+    for w in rawdata.split(','):
+        if '=' in w:
+            lbl, foc = w.split('=')
+            box = lenshash(lbl)
+            if len(boxes[box]) == 0:
+                boxes[box].append([lbl,int(foc)])
+            else: 
+                found = False
+                for i in range(len(boxes[box])):
+                    if boxes[box][i][0] == lbl:
+                        found = True
+                        boxes[box][i][1] = int(foc)
+                if not found:
+                    boxes[box].append([lbl,int(foc)])
+        else:
+            lbl,_ = w.split('-')
+            box = lenshash(lbl)
+            if len(boxes[box]) > 0:
+                for i in range(len(boxes[box])):
+                    if boxes[box][i][0] == lbl:
+                        boxes[box].remove([boxes[box][i][0],boxes[box][i][1]])
+                        break
+    total = 0
+    for n in range(len(boxes)):
+        val = 0
+        if len(boxes[n]) > 0:
+            for j in range(len(boxes[n])):
+                val += (n+1) * (j+1) * boxes[n][j][1]
+        total += val
+    return total
 
 
 if __name__ == "__main__":

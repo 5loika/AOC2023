@@ -3,7 +3,6 @@
 
 import sys
 import aocd
-import re
 
 TESTDATA1 = TESTDATA2 = """O....#....
 O.OO#....#

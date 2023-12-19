@@ -1,5 +1,7 @@
 #!/bin/python3
-""" Advent of Code 2023 -- Day 16"""
+""" Advent of Code 2023 -- Day 17"""
+# 916 is too low (Curiously, it's the right answer for someone else)
+# 989 is too high... Wait 5 minutes :(
 
 import sys
 import aocd
@@ -25,9 +27,12 @@ TESTDATA1 = TESTDATA2 = """2413432311323
 TEST1 = 102
 TEST2 = None
 
+cost = defaultdict(lambda: 65535)
+graph = {}
 
 def neighbors(graph, node):
-    dirs = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+    # dirs = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+    dirs = [[0, 1], [-1, 0], [0, -1], [1, 0]]
     result = []
     for dir in dirs:
         neighbor = (node[0] + dir[0], node[1] + dir[1])
@@ -40,13 +45,13 @@ def neighbors(graph, node):
 def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
-    return abs(x1 - x2) + abs(y1 - y2)
+    return (abs(x1 - x2) + abs(y1 - y2)) * 3.2
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
-    cost = defaultdict(lambda: 0)
-    graph = {}
+    cost.clear()
+    graph.clear()
     maxcols = maxrows = None
     row = 0
     for l in rawdata.splitlines():
@@ -60,16 +65,13 @@ def part1(rawdata):
             col += 1
         row += 1
 
-    adjacent = []
-    dirs = [[1, 0], [0, 1], [-1, 0], [0, -1]]
     for row in range(maxrows):
         for col in range(maxcols):
-            adjacent.clear()
-            for dir in dirs:
-                neighbor = (row + dir[0], col + dir[1])
-                if neighbor in graph.keys():
-                    graph[(row, col)].append(neighbor)
-    # AStar logic from redbloggames.com
+            for neighbor in neighbors(graph,(row,col)):
+                graph[(row, col)].append(neighbor)
+
+
+    # AStar logic from redblobgames.com
     start = (0, 0)
     goal = (maxrows - 1, maxcols - 1)
     frontier = PriorityQueue()
@@ -86,54 +88,49 @@ def part1(rawdata):
             break
 
         for next in neighbors(graph, current):
-            if current == (1, 4):
-                print("next:", next)
-                print("cost so far:", cost_so_far)
-                print("cost next:", cost[next])
-                print("heuristic:", heuristic(goal, next))
-            backtrack = []
-            back = current
-            backtrack.append(next)
-            backtrack.append(current)
-            forceturn = 0
-            for n in range(4):
-                if came_from[back] != None:
-                    backtrack.append(came_from[back])
-                    back = came_from[back]
-            if len(backtrack) > 4:
-                if (
-                    backtrack[0][0]
-                    == backtrack[1][0]
-                    == backtrack[2][0]
-                    == backtrack[3][0]
-                    == backtrack[4][0]
-                ):
-                    forceturn = 32767
-                elif (
-                    backtrack[0][1]
-                    == backtrack[1][1]
-                    == backtrack[2][1]
-                    == backtrack[3][1]
-                    == backtrack[4][1]
-                ):
-                    forceturn = 32767
-            new_cost = cost_so_far[current] + cost[next] + forceturn
-            if next not in cost_so_far or new_cost < cost_so_far[next]:
-                cost_so_far[next] = new_cost
-                priority = new_cost + heuristic(goal, next)
-                frontier.put(next, priority)
-                came_from[next] = current
+            skip = False
+        # if next == came_from[current]:
+        #     # print("Skip U turn",next, came_from[current])
+        #     skip = True
+        # else:
+            thispath = []
+            node = current
+            while came_from[node] != None:
+                thispath.append(node)
+                node = came_from[node]
+            if len(thispath) > 3:
+                if next[0] == thispath[0][0] == thispath[1][0] == thispath[2][0] == thispath[3][0]:
+                    # print("Skip", next, thispath[0:4])
+                    skip = True
+                if next[1] == thispath[0][1] == thispath[1][1] == thispath[2][1] == thispath[3][1]:
+                    # print("Skip", next, thispath[0:4])
+                    skip = True
+            if not skip:
+                new_cost = cost_so_far[current] + cost[next]
+                if next not in cost_so_far or new_cost < cost_so_far[next]:
+                    cost_so_far[next] = new_cost
+                    priority = new_cost
+                    #priority = new_cost + heuristic(goal, next)
+                    frontier.put(next, priority)                    
+
+                    came_from[next] = current
     bestpath = [
         (0, 1), (0, 2), (1, 2), (1, 3), (1, 4), (1, 5),
         (0, 5), (0, 6), (0, 7), (0, 8), (1, 8), (2, 8),
         (2, 9), (2, 10), (3, 10), (4, 10), (4, 11), (5, 11),
         (6, 11), (7, 11), (7, 12), (8, 12), (9, 12), (10, 12),
         (10, 11), (11, 11), (12, 11), (12, 12)]
-    totalcost = 0
+    bestcost = 0
+    j = 0
     for n in bestpath:
-        totalcost += cost[n]
-    print(bestpath)
-    print(totalcost)
+        print('\t',cost[n],n,end='')
+        bestcost += cost[n]
+        j += 1
+        if j % 7 == 0:
+            print()
+    print()
+    print(bestcost)
+
     path = []
     node = goal
     while node != start:
@@ -141,10 +138,15 @@ def part1(rawdata):
         node = came_from[node]
     path.reverse()
     totalcost = 0
+    j = 0
     for n in path:
+        print('\t',cost[n],n,end='')
         totalcost += cost[n]
-    path.insert(0, (0, 0))
-    print(path)
+        j += 1
+        if j % 7 == 0:
+            print()
+    print()
+    print(totalcost)
 
     return totalcost
 

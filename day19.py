@@ -1,62 +1,75 @@
 #!/bin/python3
-""" Advent of Code 2023 -- Day 12"""
+""" Advent of Code 2023 -- Day 19"""
 
 import sys
 import aocd
-from itertools import combinations
-from itertools import permutations
 import re
 
-TESTDATA1 = TESTDATA2 = """???.### 1,1,3
-.??..??...?##. 1,1,3
-?#?#?#?#?#?#?#? 1,3,1,6
-????.#...#... 4,1,1
-????.######..#####. 1,6,5
-?###???????? 3,2,1
+TESTDATA1 = TESTDATA2 = """px{a<2006:qkq,m>2090:A,rfg}
+pv{a>1716:R,A}
+lnx{m>1548:A,A}
+rfg{s<537:gd,x>2440:R,A}
+qs{s>3448:A,lnx}
+qkq{x<1416:A,crn}
+crn{x>2662:A,R}
+in{s<1351:px,qqz}
+qqz{s>2770:qs,m<1801:hdj,R}
+gd{a>3333:R,R}
+hdj{m>838:A,pv}
+
+{x=787,m=2655,a=1222,s=2876}
+{x=1679,m=44,a=2067,s=496}
+{x=2036,m=264,a=79,s=2244}
+{x=2461,m=1339,a=466,s=291}
+{x=2127,m=1623,a=2188,s=1013}
 """
 
-TEST1 = 21
-TEST2 = None
+TEST1 = 19114
+TEST2 = 167409079868000
+
+def processpart(rule,part):
+    x,m,a,s = re.findall('\d+',part)
+    x = int(x)
+    m = int(m)
+    a = int(a)
+    s = int(s)
+    for r in rule:
+        if eval(r[0]):
+            return r[1]
+    return None
 
 
 def part1(rawdata):
     """Code to solve part 1 of the puzzle"""
-    springs = []
-    repair = []
-    lines = rawdata.splitlines()
-    for l in lines:
-        a, b = l.split()
-        springs.append(a)
-        repair.append([int(x) for x in b.split(',')])
+    program = dict()
+    steps, parts = rawdata.split('\n\n')
+    for s in steps.splitlines():
+        id,rules = s.split('{')
+        rules = rules[0:-1]
+        q = [q for q in rules.split(',')]
+        parsed = []
+        for n in range(len(q)-1):
+            rule,dest = q[n].split(':')
+            parsed.append([rule,dest])
+        parsed.append(['True == True',q[-1]])
+        program[id] = parsed
+        print(id,parsed)
     total = 0
-    for d in range(len(springs)):
-        j = springs[d].count('?')
-        y = sum(repair[d])
-        k = springs[d].count('#')
-        p = ''.join(['#' for i in range(y-k)])
-        p += ''.join(['.' for i in range(j-(y-k))])
-        o = set(permutations(p,j))
-        print(y,j,k,p,len(o))
-        input("Pause")
-        for q in o:
-            t = springs[d] #copy.copy(s)
-            for c in q:
-                n = t.index('?')
-                t = t[:n]+c+t[n+1:]
-            w = re.findall('#+',t)
-            r = []
-            for x in w:
-                r.append(len(x))
-            if r == repair[d]:
-                print(springs[d],'\t',t,'\t',repair[d],'\t',r)
-                total += 1
-        print(d)
+    for p in parts.splitlines():
+        print(p)
+        next = 'in'
+        while next != 'R' and next != 'A':
+            print(next,program[next])
+            next = processpart(program[next],p)
+        if next == 'A':
+            x, m, a, s = re.findall('\\d+',p)
+            total += int(x) + int(m) + int(a) + int(s)
+    print(total)
     return total
 
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-
     return None
 
 

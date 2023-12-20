@@ -130,8 +130,41 @@ def part1(rawdata):
 
 def part2(rawdata):
     """Code to solve part 2 of the puzzle"""
-
-    return None
+    outline = defaultdict(lambda: '.')
+    board = defaultdict(lambda: '.')
+    maxrow = minrow = 0
+    maxcol = mincol = 0
+    loc = [0,0]
+    outline[(loc[0],loc[1])] = '#'
+    for l in rawdata.splitlines():
+        dir, dist, _ = l.split(' ')
+        if dir == 'U':
+            delta = [-1,0]
+        elif dir == 'D':
+            delta = [1,0]
+        elif dir == 'L':
+            delta = [0,-1]
+        elif dir == 'R':
+            delta = [0,1]
+        for n in range(int(dist)):
+            loc[0] += delta[0]
+            loc[1] += delta[1]
+            maxrow = max(maxrow,loc[0])
+            minrow = min(minrow,loc[0])
+            maxcol = max(maxcol, loc[1])
+            mincol = min(mincol,loc[1])
+            outline[(loc[0],loc[1])] = '#'
+    rowoffset = 0 - minrow
+    coloffset = 0 - mincol
+    m = [k for k in outline.keys()]
+    m.sort()
+    total = 0
+    while len(m) > 0:
+        first = m.pop(0)
+        second = m.pop(0)
+        total += second[1] - first[1] + 1
+        print(second[1] - first[1],first,second)
+    return total
 
 
 if __name__ == "__main__":
